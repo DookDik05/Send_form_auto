@@ -14,9 +14,12 @@ class Application {
   constructor() {
     this.modules = {};
     this.currentTab = 'dashboard';
+    this.isInitialized = false;
   }
 
   init() {
+    if (this.isInitialized) return;
+    this.isInitialized = true;
     console.log("⚡ AutoForm Pro Max - Booting cockpit modules...");
 
     try {
@@ -50,7 +53,7 @@ class Application {
       const initialTab = store.getState().activeTab || 'dashboard';
       this.switchTab(initialTab);
 
-      console.log("✅ AutoForm Pro Max - All modules rendered successfully.");
+      console.log("✅ AutoForm Pro Max - All cockpit modules rendered successfully.");
     } catch (err) {
       console.error("❌ AutoForm Pro Max - Boot error:", err);
     }
@@ -286,12 +289,12 @@ class Application {
   }
 }
 
-// Robust execution trigger for modern ES Modules
+// Unconditional boot instantiation (overrides the automatic window.app DOM reference)
 function boot() {
-  if (!window.app) {
-    window.app = new Application();
-    window.app.init();
-  }
+  const appInstance = new Application();
+  window.app = appInstance;
+  window.autoFormApp = appInstance;
+  appInstance.init();
 }
 
 if (document.readyState === 'loading') {

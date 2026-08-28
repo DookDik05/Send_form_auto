@@ -2,7 +2,7 @@
    AUTOFORM PRO MAX - LAYOUT SYSTEM
    ========================================================================== */
 
-#app {
+#app, #cockpit-app, .cockpit-root {
   display: flex;
   width: 100vw;
   height: 100vh;
