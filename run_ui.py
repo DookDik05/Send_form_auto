@@ -32,8 +32,20 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 FRONTEND_DIR = os.path.join(ROOT_DIR, "frontend")
 
 def scan_actual_csv_history():
-    """สแกนไฟล์ CSV จริงทั้งหมดในโปรเจกต์และนับยอดการส่งจริงแยกตามแต่ละฟอร์ม"""
-    files = glob.glob(os.path.join(ROOT_DIR, "*.csv"))
+    """สแกนไฟล์ CSV จริงทั้งหมดในโปรเจกต์ (ทั้งใน data/results/ และ root) และนับยอดการส่งจริงแยกตามแต่ละฟอร์ม"""
+    search_dirs = [
+        os.path.join(ROOT_DIR, "data", "results"),
+        ROOT_DIR
+    ]
+    files = []
+    seen = set()
+    for sdir in search_dirs:
+        if os.path.exists(sdir):
+            for f in glob.glob(os.path.join(sdir, "*.csv")):
+                basename = os.path.basename(f)
+                if basename not in seen:
+                    seen.add(basename)
+                    files.append(f)
     
     categories = {
         "sushi": {
@@ -233,9 +245,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             params = urllib.parse.parse_qs(parsed.query)
             filename = params.get("file", [""])[0]
             safe_filename = os.path.basename(filename)
-            file_path = os.path.join(ROOT_DIR, safe_filename)
+            candidate_paths = [
+                os.path.join(ROOT_DIR, "data", "results", safe_filename),
+                os.path.join(ROOT_DIR, safe_filename)
+            ]
+            file_path = next((p for p in candidate_paths if os.path.exists(p)), None)
             
-            if os.path.exists(file_path) and safe_filename.endswith(".csv"):
+            if file_path and safe_filename.endswith(".csv"):
                 with open(file_path, "rb") as f:
                     csv_data = f.read()
                 self.send_response(200)
