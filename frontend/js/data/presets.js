@@ -4,6 +4,50 @@
 
 export const CAMPAIGN_PRESETS = [
   {
+    id: "sushi-conveyor-survey",
+    title: "แบบสอบถามร้านซูชิสายพาน (7Ps & พฤติกรรม)",
+    subtitle: "ปัจจัยทางการตลาดที่ส่งผลต่อการเลือกใช้บริการ ร้านซูชิสายพาน",
+    url: "https://docs.google.com/forms/d/e/1FAIpQLSfVCqzAoQZkyfPxRpkme_HV_7I_ZcoZxXjODZiAIQm8wcakBw/viewform",
+    script: "auto-fill-sushi-survey.py",
+    targetCount: 100,
+    concurrency: 10,
+    delayMin: 0.2,
+    delayMax: 0.5,
+    mode: "httpx",
+    tags: ["7Ps Marketing", "Likert 5-Star", "High-Speed"],
+    color: "#f43f5e",
+    questions: [
+      {
+        entry: "entry.392049935",
+        title: "1. ความสดใหม่และคุณภาพของวัตถุดิบซูชิ",
+        type: "likert",
+        options: [
+          { label: "5 = เห็นด้วยอย่างยิ่ง / สำคัญมากที่สุด", weight: 80 },
+          { label: "4 = เห็นด้วย / สำคัญมาก", weight: 18 },
+          { label: "3 = เห็นด้วยปานกลาง / สำคัญปานกลาง", weight: 2 }
+        ]
+      },
+      {
+        entry: "entry.737780018",
+        title: "2. ความคุ้มค่าเมื่อเทียบกับราคา",
+        type: "likert",
+        options: [
+          { label: "5 = เห็นด้วยอย่างยิ่ง / สำคัญมากที่สุด", weight: 85 },
+          { label: "4 = เห็นด้วย / สำคัญมาก", weight: 15 }
+        ]
+      },
+      {
+        entry: "entry.1312370900",
+        title: "3. ความตั้งใจกลับมาใช้บริการอีกในอนาคต",
+        type: "likert",
+        options: [
+          { label: "5 = เห็นด้วยอย่างยิ่ง / สำคัญมากที่สุด", weight: 90 },
+          { label: "4 = เห็นด้วย / สำคัญมาก", weight: 10 }
+        ]
+      }
+    ]
+  },
+  {
     id: "seagames-survey-33",
     title: "แบบประเมินซีเกมส์ ครั้งที่ 33 (SEA Games)",
     subtitle: "กิจกรรม INSPIRE THE GAME คลินิกกีฬา ปลุกพลังฝัน",
