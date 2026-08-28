@@ -36,42 +36,46 @@
       <nav class="sidebar-nav">
         <div class="nav-section-title">Operations</div>
         
-        <a class="nav-item active" data-tab="dashboard">
+        <a class="nav-item active" data-tab="dashboard" data-tooltip="Dashboard Overview (Press 1)">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
           <span>Command Hub</span>
-          <span class="nav-badge">LIVE</span>
+          <kbd class="kbd-badge" style="margin-left: auto;">1</kbd>
         </a>
 
-        <a class="nav-item" data-tab="inspector">
+        <a class="nav-item" data-tab="dispatcher" data-tooltip="Execution Runner & Selenium Viewport (Press 2)">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>Dispatcher Runner</span>
+          <kbd class="kbd-badge" style="margin-left: auto;">2</kbd>
+        </a>
+
+        <a class="nav-item" data-tab="inspector" data-tooltip="Inspect & Parse Google Forms (Press 3)">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
           <span>Form Inspector</span>
+          <kbd class="kbd-badge" style="margin-left: auto;">3</kbd>
         </a>
 
-        <a class="nav-item" data-tab="payload">
+        <a class="nav-item" data-tab="payload" data-tooltip="Payload Studio & Probability Presets">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
           <span>Payload Studio</span>
         </a>
 
-        <a class="nav-item" data-tab="dispatcher">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <span>Dispatcher Runner</span>
-        </a>
-
         <div class="nav-section-title">Telemetry & Logs</div>
 
-        <a class="nav-item" data-tab="terminal">
+        <a class="nav-item" data-tab="terminal" data-tooltip="Live Matrix Terminal Logs (Press 4)">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
           <span>Live Terminal</span>
+          <kbd class="kbd-badge" style="margin-left: auto;">4</kbd>
         </a>
 
-        <a class="nav-item" data-tab="analytics">
+        <a class="nav-item" data-tab="analytics" data-tooltip="Form History Vault & Real Submissions (Press 5)">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
           <span>Analytics & Vault</span>
+          <kbd class="kbd-badge" style="margin-left: auto;">5</kbd>
         </a>
       </nav>
 
       <div class="sidebar-footer">
-        <div class="system-status-pill">
+        <div class="system-status-pill" data-tooltip="All async coroutines active & healthy">
           <div class="pulse-dot"></div>
           <span>HTTPX Engine Online</span>
         </div>
@@ -91,6 +95,9 @@
         </div>
 
         <div class="topbar-right">
+          <button class="btn btn-ghost btn-sm" onclick="window.app.toggleShortcutsModal()" data-tooltip="Keyboard Shortcuts (Press ?)">
+            ⌨️ Hotkeys
+          </button>
           <button class="btn btn-secondary btn-sm" onclick="window.app.switchTab('inspector')">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
             Inspect New Form

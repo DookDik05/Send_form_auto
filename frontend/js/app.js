@@ -1,5 +1,5 @@
 /**
- * AutoForm Pro Max - Main Application Entrypoint & Orchestrator
+ * AutoForm Pro Max - Main Application Entrypoint & Orchestrator (Impeccable Edition)
  */
 
 import { store } from './store.js';
@@ -36,20 +36,20 @@ class Application {
     // Bind sidebar navigation
     this.bindNavigation();
 
+    // Setup global keyboard shortcuts & tooltips
+    this.setupKeyboardShortcuts();
+    this.setupTooltips();
+
     // Subscribe to reactive store changes
     store.subscribe((state) => {
       this.handleStateChange(state);
     });
 
-    // Setup global keyboard shortcuts
-    window.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        this.switchTab('inspector');
-      }
-    });
+    // Restore active tab from state
+    const initialTab = store.getState().activeTab || 'dashboard';
+    this.switchTab(initialTab);
 
-    console.log("⚡ AutoForm Pro Max Web UI Initialized.");
+    console.log("⚡ AutoForm Pro Max Web UI Initialized (Impeccable Craftsmanship).");
   }
 
   bindNavigation() {
@@ -61,6 +61,160 @@ class Application {
           this.switchTab(tab);
         }
       });
+    });
+
+    // Quick Dispatch header button
+    const btnQuick = document.getElementById('btn-quick-dispatch');
+    if (btnQuick) {
+      btnQuick.addEventListener('click', () => {
+        this.switchTab('dispatcher');
+      });
+    }
+
+    // Inspect Form header button
+    const btnInspect = document.getElementById('btn-inspect-form');
+    if (btnInspect) {
+      btnInspect.addEventListener('click', () => {
+        this.switchTab('inspector');
+      });
+    }
+  }
+
+  setupKeyboardShortcuts() {
+    window.addEventListener('keydown', (e) => {
+      // Avoid triggering when typing in inputs
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+        if (e.key === 'Escape') {
+          document.activeElement.blur();
+        }
+        return;
+      }
+
+      // Quick tab switching 1-5
+      if (e.key === '1') this.switchTab('dashboard');
+      else if (e.key === '2') this.switchTab('dispatcher');
+      else if (e.key === '3') this.switchTab('inspector');
+      else if (e.key === '4') this.switchTab('terminal');
+      else if (e.key === '5') this.switchTab('analytics');
+
+      // Ctrl + Enter = Launch Campaign
+      else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        this.switchTab('dispatcher');
+        setTimeout(() => {
+          const btn = document.getElementById('btn-launch-mission');
+          if (btn && btn.style.display !== 'none') btn.click();
+        }, 150);
+      }
+
+      // Esc = Abort Mission or close modal
+      else if (e.key === 'Escape') {
+        const modal = document.getElementById('shortcuts-modal');
+        if (modal && modal.classList.contains('active')) {
+          modal.classList.remove('active');
+        } else {
+          const btnAbort = document.getElementById('btn-abort-mission');
+          if (btnAbort && btnAbort.style.display !== 'none') btnAbort.click();
+        }
+      }
+
+      // ? = Toggle Shortcuts Modal
+      else if (e.key === '?' || e.key === '/') {
+        this.toggleShortcutsModal();
+      }
+    });
+  }
+
+  toggleShortcutsModal() {
+    let modal = document.getElementById('shortcuts-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'shortcuts-modal';
+      modal.className = 'shortcuts-modal-overlay';
+      modal.innerHTML = `
+        <div class="shortcuts-modal-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1.2rem;">⌨️</span>
+              <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-primary);">Keyboard Shortcuts</h3>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="btn-close-shortcuts-modal" style="padding: 0.2rem 0.5rem;">✕</button>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.8rem;">
+            <div style="display: flex; justify-content: space-between; padding: 0.4rem 0.6rem; background: var(--bg-surface-3); border-radius: var(--radius-sm);">
+              <span>Dashboard</span>
+              <kbd class="kbd-badge">1</kbd>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.4rem 0.6rem; background: var(--bg-surface-3); border-radius: var(--radius-sm);">
+              <span>Dispatcher</span>
+              <kbd class="kbd-badge">2</kbd>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.4rem 0.6rem; background: var(--bg-surface-3); border-radius: var(--radius-sm);">
+              <span>Inspector</span>
+              <kbd class="kbd-badge">3</kbd>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.4rem 0.6rem; background: var(--bg-surface-3); border-radius: var(--radius-sm);">
+              <span>Matrix Terminal</span>
+              <kbd class="kbd-badge">4</kbd>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.4rem 0.6rem; background: var(--bg-surface-3); border-radius: var(--radius-sm);">
+              <span>Analytics Vault</span>
+              <kbd class="kbd-badge">5</kbd>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.4rem 0.6rem; background: var(--bg-surface-3); border-radius: var(--radius-sm);">
+              <span>Launch Campaign</span>
+              <kbd class="kbd-badge">Ctrl+Enter</kbd>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.4rem 0.6rem; background: var(--bg-surface-3); border-radius: var(--radius-sm);">
+              <span>Abort Mission</span>
+              <kbd class="kbd-badge">Esc</kbd>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.4rem 0.6rem; background: var(--bg-surface-3); border-radius: var(--radius-sm);">
+              <span>Toggle Shortcuts</span>
+              <kbd class="kbd-badge">?</kbd>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      modal.querySelector('#btn-close-shortcuts-modal').addEventListener('click', () => {
+        modal.classList.remove('active');
+      });
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+      });
+    }
+    modal.classList.toggle('active');
+  }
+
+  setupTooltips() {
+    // Elegant micro-tooltips implementation
+    document.addEventListener('mouseover', (e) => {
+      const target = e.target.closest('[data-tooltip]');
+      if (!target) return;
+      const text = target.getAttribute('data-tooltip');
+      if (!text) return;
+
+      let tip = document.getElementById('global-micro-tooltip');
+      if (!tip) {
+        tip = document.createElement('div');
+        tip.id = 'global-micro-tooltip';
+        tip.className = 'micro-tooltip';
+        document.body.appendChild(tip);
+      }
+      tip.textContent = text;
+      tip.classList.add('visible');
+
+      const rect = target.getBoundingClientRect();
+      tip.style.top = `${rect.top - 32}px`;
+      tip.style.left = `${rect.left + (rect.width / 2)}px`;
+    });
+
+    document.addEventListener('mouseout', (e) => {
+      const target = e.target.closest('[data-tooltip]');
+      if (!target) return;
+      const tip = document.getElementById('global-micro-tooltip');
+      if (tip) tip.classList.remove('visible');
     });
   }
 
@@ -102,9 +256,11 @@ class Application {
       }
     });
 
-    // Re-render or refresh specific modules if needed
+    // Module-specific hooks
     if (tabName === 'terminal') {
       this.modules.terminal.scrollToBottom();
+    } else if (tabName === 'analytics') {
+      this.modules.analytics.fetchLiveHistory();
     }
   }
 

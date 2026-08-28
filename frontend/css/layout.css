@@ -341,3 +341,121 @@
 .modal-backdrop.open .modal-dialog {
   transform: scale(1) translateY(0);
 }
+
+/* ==========================================================================
+   KEYBOARD SHORTCUTS MODAL & BADGES
+   ========================================================================== */
+.shortcuts-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shortcuts-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.shortcuts-modal-card {
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: var(--shadow-lg), 0 0 35px rgba(99, 102, 241, 0.2);
+  transform: scale(0.95);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shortcuts-modal-overlay.active .shortcuts-modal-card {
+  transform: scale(1);
+}
+
+.kbd-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-medium);
+  color: var(--accent-cyan);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Micro Tooltips */
+.micro-tooltip {
+  position: fixed;
+  transform: translateX(-50%);
+  background: #1e293b;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xs);
+  padding: 0.3rem 0.6rem;
+  font-size: 0.72rem;
+  color: #f8fafc;
+  pointer-events: none;
+  z-index: 2000;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  white-space: nowrap;
+}
+
+.micro-tooltip.visible {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS (Mobile & Tablet Layout Optimization)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 200px;
+  }
+  .topbar {
+    padding: 0 1rem;
+  }
+  .content-viewport {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 860px) {
+  #app {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .sidebar-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 0.5rem;
+  }
+  .sidebar-header {
+    height: 48px;
+  }
+  .sidebar-footer {
+    display: none;
+  }
+  .topbar {
+    display: none;
+  }
+  .content-viewport {
+    padding: 0.75rem;
+  }
+}
+
