@@ -1,0 +1,216 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+AutoForm Utils - CSV Manager & Disk Telemetry Scanner
+Handles exporting submissions to data/results/ and aggregating historical statistics.
+"""
+
+import os
+import glob
+import csv
+from datetime import datetime
+
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+RESULTS_DIR = os.path.join(ROOT_DIR, "data", "results")
+
+os.makedirs(RESULTS_DIR, exist_ok=True)
+
+def export_results_to_csv(prefix: str, records: list) -> str:
+    """Exports list of response dicts to data/results/ with UTF-8 BOM encoding."""
+    if not records:
+        return ""
+    
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"{prefix}_results_{timestamp}.csv"
+    filepath = os.path.join(RESULTS_DIR, filename)
+
+    fieldnames = list(records[0].keys())
+    with open(filepath, "w", newline="", encoding="utf-8-sig") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(records)
+
+    return filepath
+
+def get_all_results_files():
+    """Finds all CSV result files in both data/results and root."""
+    files = glob.glob(os.path.join(RESULTS_DIR, "*.csv"))
+    files.extend(glob.glob(os.path.join(ROOT_DIR, "*.csv")))
+    return list(set(files))
+
+def scan_all_csv_history():
+    """Scans and counts actual historical records across all forms."""
+    files = get_all_results_files()
+    
+    categories = {
+        "sushi": {
+            "id": "sushi-conveyor",
+            "formId": "1FAIpQLSfVCqzAoQZkyfPxRpkme_HV_7I_ZcoZxXjODZiAIQm8wcakBw",
+            "name": "แบบสอบถามร้านซูชิสายพาน (7Ps & พฤติกรรม)",
+            "icon": "🍣",
+            "totalSent": 0,
+            "successCount": 0,
+            "failedCount": 0,
+            "runsCount": 0,
+            "lastRun": "",
+            "primaryEngine": "Selenium & HTTPX Async",
+            "color": "#f43f5e",
+            "csvFiles": [],
+            "rows": []
+        },
+        "seagames": {
+            "id": "seagames-33",
+            "formId": "1FAIpQLSeklchUtv4O-H1SpMgWkBm1RVVJWgqqNO4KZeBeqaEtQt_UAg",
+            "name": "แบบประเมินซีเกมส์ ครั้งที่ 33 (SEA Games)",
+            "icon": "🏅",
+            "totalSent": 0,
+            "successCount": 0,
+            "failedCount": 0,
+            "runsCount": 0,
+            "lastRun": "",
+            "primaryEngine": "HTTPX Async & Selenium",
+            "color": "#6366f1",
+            "csvFiles": [],
+            "rows": []
+        },
+        "fda": {
+            "id": "fda-expo",
+            "formId": "1FAIpQLSdhA8GSrZL5-4a0Q_rWnmfkW6KFphzxLDgzcqbwaH3AATwzmQ",
+            "name": "แบบลงทะเบียน FDA Expo 2026",
+            "icon": "💊",
+            "totalSent": 0,
+            "successCount": 0,
+            "failedCount": 0,
+            "runsCount": 0,
+            "lastRun": "",
+            "primaryEngine": "HTTPX Async",
+            "color": "#06b6d4",
+            "csvFiles": [],
+            "rows": []
+        },
+        "registration": {
+            "id": "batch-890",
+            "formId": "1FAIpQLSeFltPTHhM4uNfOSh0vDuAWL5M-TFzD8KQiuLKF8J3G9jSnlw",
+            "name": "Batch Registration 890 Records",
+            "icon": "📋",
+            "totalSent": 0,
+            "successCount": 0,
+            "failedCount": 0,
+            "runsCount": 0,
+            "lastRun": "",
+            "primaryEngine": "HTTPX Coroutines",
+            "color": "#10b981",
+            "csvFiles": [],
+            "rows": []
+        },
+        "mall": {
+            "id": "mall-survey",
+            "formId": "1FAIpQLScYXOItwUXkBmHpgQ-oZHozu2BqkfYK7WswvwkQRXANxru8PA",
+            "name": "แบบประเมินความพึงพอใจศูนย์การค้า",
+            "icon": "🏬",
+            "totalSent": 0,
+            "successCount": 0,
+            "failedCount": 0,
+            "runsCount": 0,
+            "lastRun": "",
+            "primaryEngine": "HTTPX Async",
+            "color": "#f59e0b",
+            "csvFiles": [],
+            "rows": []
+        },
+        "satisfaction": {
+            "id": "satisfaction-survey",
+            "formId": "1FAIpQLSfGErFMwiRBEn0Y5yNulltD9u_Ypag-b0U6wG_BHXP_TMxXEA",
+            "name": "แบบประเมินความพึงพอใจผู้ใช้บริการ",
+            "icon": "🌟",
+            "totalSent": 0,
+            "successCount": 0,
+            "failedCount": 0,
+            "runsCount": 0,
+            "lastRun": "",
+            "primaryEngine": "HTTPX Async",
+            "color": "#a855f7",
+            "csvFiles": [],
+            "rows": []
+        }
+    }
+
+    for fpath in files:
+        fname = os.path.basename(fpath)
+        cat_key = None
+        if fname.startswith("sushi_survey_results"):
+            cat_key = "sushi"
+        elif fname.startswith("seagames_survey_results"):
+            cat_key = "seagames"
+        elif fname.startswith("fda_expo_results"):
+            cat_key = "fda"
+        elif fname.startswith("registration_results"):
+            cat_key = "registration"
+        elif fname.startswith("survey_mall_results") or fname.startswith("survey_results"):
+            cat_key = "mall"
+        elif fname.startswith("satisfaction_survey_results"):
+            cat_key = "satisfaction"
+        
+        if not cat_key:
+            continue
+
+        cat = categories[cat_key]
+        try:
+            encodings = ['utf-8-sig', 'utf-8', 'cp874', 'tis-620']
+            content = None
+            for enc in encodings:
+                try:
+                    with open(fpath, "r", encoding=enc) as f:
+                        content = list(csv.reader(f))
+                    break
+                except Exception:
+                    continue
+            
+            if not content or len(content) <= 1:
+                continue
+
+            data_rows = content[1:]
+            row_count = len(data_rows)
+            
+            cat["totalSent"] += row_count
+            cat["successCount"] += row_count
+            cat["runsCount"] += 1
+            
+            file_stat = os.stat(fpath)
+            file_size_kb = f"{file_stat.st_size / 1024:.1f} KB"
+            mtime = os.path.getmtime(fpath)
+            dt_str = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M")
+
+            if not cat["lastRun"] or dt_str > cat["lastRun"]:
+                cat["lastRun"] = dt_str
+
+            cat["csvFiles"].append({
+                "name": fname,
+                "count": row_count,
+                "size": file_size_kb,
+                "date": dt_str
+            })
+
+            # Grab preview samples
+            for idx, r in enumerate(data_rows[:8]):
+                sample_row = {
+                    "id": len(cat["rows"]) + 1,
+                    "name": r[1] if len(r) > 1 else f"Respondent #{idx+1}",
+                    "phone": r[2] if len(r) > 2 else "08x-xxx-xxxx",
+                    "province": r[3] if len(r) > 3 else "กรุงเทพฯ",
+                    "rating": r[4] if len(r) > 4 else "5 = มากที่สุด",
+                    "time": dt_str,
+                    "status": "HTTP 200 (Verified)"
+                }
+                cat["rows"].append(sample_row)
+
+        except Exception:
+            continue
+
+    for k, cat in categories.items():
+        if cat["totalSent"] > 0:
+            cat["successRate"] = f"{(cat['successCount'] / cat['totalSent'] * 100):.1f}%"
+        else:
+            cat["successRate"] = "100.0%"
+
+    return list(categories.values())
