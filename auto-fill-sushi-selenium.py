@@ -33,7 +33,7 @@ if sys.platform == 'win32':
 # ============================================================================
 FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfVCqzAoQZkyfPxRpkme_HV_7I_ZcoZxXjODZiAIQm8wcakBw/viewform"
 NUM_RESPONSES = int(sys.argv[1]) if len(sys.argv) > 1 else 10
-HEADLESS = True  # เปลี่ยนเป็น False เพื่อดู Chrome รันแบบสดๆ
+HEADLESS = False  # เปลี่ยนเป็น False เพื่อดู Chrome รันแบบสดๆ
 
 def get_driver():
     options = Options()
