@@ -224,7 +224,16 @@ export class TerminalModule {
 
   renderTableRows(logs) {
     if (!logs || logs.length === 0) {
-      return `<tr><td colspan="7" style="text-align: center; color: var(--text-dim); padding: 2rem;">No logs found for [${this.selectedFormSlug}] with status [${this.statusFilter}].</td></tr>`;
+      return `<tr><td colspan="7">
+        <div class="empty-state">
+          <div class="empty-state-icon">📭</div>
+          <div class="empty-state-title">ยังไม่มีข้อมูล Log</div>
+          <div class="empty-state-desc">ยังไม่พบบันทึกการส่งสำหรับ <strong>${this.selectedFormSlug}</strong> ที่มีสถานะ <strong>${this.statusFilter}</strong> — ลอง Launch Campaign ก่อนครับ</div>
+          <div class="empty-state-action">
+            <button class="btn btn-secondary btn-sm" onclick="window.app.switchTab('dispatcher')">→ ไปที่ Dispatcher Runner</button>
+          </div>
+        </div>
+      </td></tr>`;
     }
 
     const query = this.searchQuery.toLowerCase();

@@ -273,6 +273,18 @@
   border-radius: var(--radius-md);
 }
 
+.btn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 /* ==========================================================================
    INPUTS & FORM CONTROLS
    ========================================================================== */
@@ -310,10 +322,12 @@
   transition: all var(--transition-fast);
 }
 
-.form-input:focus {
+.form-input:focus,
+.form-input:focus-visible {
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px var(--accent-primary-glow);
   background: var(--bg-surface-1);
+  outline: none;
 }
 
 .form-input::placeholder {
@@ -496,7 +510,9 @@
 
 .stacked-dist-segment {
   height: 100%;
-  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  /* transform is composited; avoid animating width to prevent layout thrash */
+  will-change: transform;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ==========================================================================
@@ -926,10 +942,11 @@
 
 .sim-form-header {
   background: var(--bg-surface-2);
-  border: 1px solid var(--border-subtle);
-  border-top: 6px solid var(--accent-primary);
+  border: 1px solid var(--border-medium);
   border-radius: var(--radius-md);
   padding: 1.25rem;
+  /* Google Forms-like accent: thin, not a slab */
+  box-shadow: inset 0 3px 0 var(--accent-primary);
 }
 
 .sim-form-title {
@@ -1198,7 +1215,108 @@
 
 .log-row-item:hover {
   background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
 }
+
+.log-row-item {
+  transition: background var(--transition-fast);
+}
+
+/* ==========================================================================
+   DATA TABLE (Logs Explorer & Analytics)
+   ========================================================================== */
+.table-container {
+  overflow-x: auto;
+  overflow-y: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  min-width: 640px;
+}
+
+.data-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--bg-surface-2);
+}
+
+.data-table th {
+  padding: 0.65rem 0.85rem;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border-medium);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+/* form-chip keyboard focus */
+.form-chip:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   EMPTY STATE COMPONENT
+   ========================================================================== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  gap: 0.75rem;
+  color: var(--text-dim);
+}
+
+.empty-state-icon {
+  font-size: 2.5rem;
+  opacity: 0.5;
+  margin-bottom: 0.25rem;
+}
+
+.empty-state-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.empty-state-desc {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+.empty-state-action {
+  margin-top: 0.5rem;
+}
+
+
 
 
 
