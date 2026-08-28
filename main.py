@@ -33,7 +33,7 @@ def cmd_run(args):
 def cmd_selenium(args):
     form_target = args.target.lower()
     if form_target in ("sushi", "sushi_survey"):
-        run_sushi_selenium(count=args.count, headless=not args.visual)
+        run_sushi_selenium(count=args.count, headless=args.headless)
     else:
         print(f"Unknown target: '{args.target}'. Available targets: sushi")
 
@@ -79,7 +79,7 @@ def main():
     p_sel = subparsers.add_parser("selenium", help="Run form automation using Selenium browser")
     p_sel.add_argument("target", choices=["sushi"], help="Form target to execute")
     p_sel.add_argument("--count", "-n", type=int, default=5, help="Number of responses")
-    p_sel.add_argument("--visual", action="store_true", help="Show real Chrome browser window")
+    p_sel.add_argument("--headless", action="store_true", default=False, help="Run in background headless mode (no UI window)")
 
     args = parser.parse_args()
 
