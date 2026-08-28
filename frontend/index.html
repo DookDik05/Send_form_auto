@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoForm Pro Max - Google Forms Automation Cockpit</title>
+  <meta name="description" content="State-of-the-art Google Forms & Survey automation suite with live telemetry, schema parser, probability weights, and synthetic identities.">
+  
+  <!-- Premium Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="css/design-tokens.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Ambient Grid Overlay -->
+    <div class="bg-grid-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">AutoForm</span>
+          <span class="brand-subtitle">PRO MAX SUITE</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Operations</div>
+        
+        <a class="nav-item active" data-tab="dashboard">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+          <span>Command Hub</span>
+          <span class="nav-badge">LIVE</span>
+        </a>
+
+        <a class="nav-item" data-tab="inspector">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <span>Form Inspector</span>
+        </a>
+
+        <a class="nav-item" data-tab="payload">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+          <span>Payload Studio</span>
+        </a>
+
+        <a class="nav-item" data-tab="dispatcher">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>Dispatcher Runner</span>
+        </a>
+
+        <div class="nav-section-title">Telemetry & Logs</div>
+
+        <a class="nav-item" data-tab="terminal">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <span>Live Terminal</span>
+        </a>
+
+        <a class="nav-item" data-tab="analytics">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          <span>Analytics & Vault</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="system-status-pill">
+          <div class="pulse-dot"></div>
+          <span>HTTPX Engine Online</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <main class="main-wrapper">
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="view-breadcrumb">
+            <span>Send_form_auto</span>
+            <span>/</span>
+            <span class="current" id="current-view-title">Mission Control Overview</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="btn btn-secondary btn-sm" onclick="window.app.switchTab('inspector')">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            Inspect New Form
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="window.app.switchTab('dispatcher')">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Quick Dispatch
+          </button>
+        </div>
+      </header>
+
+      <!-- Dynamic Viewport Content -->
+      <section class="content-viewport">
+        <!-- Tab 1: Dashboard -->
+        <div id="view-dashboard" class="view-panel active"></div>
+
+        <!-- Tab 2: Form Inspector -->
+        <div id="view-inspector" class="view-panel"></div>
+
+        <!-- Tab 3: Payload Studio -->
+        <div id="view-payload" class="view-panel"></div>
+
+        <!-- Tab 4: Dispatcher Runner -->
+        <div id="view-dispatcher" class="view-panel"></div>
+
+        <!-- Tab 5: Terminal -->
+        <div id="view-terminal" class="view-panel"></div>
+
+        <!-- Tab 6: Analytics & Vault -->
+        <div id="view-analytics" class="view-panel"></div>
+      </section>
+
+      <!-- Statusbar Footer -->
+      <footer class="statusbar">
+        <div class="statusbar-left">
+          <div class="statusbar-item">
+            <span class="pulse-dot" style="width: 6px; height: 6px;"></span>
+            <span id="statusbar-engine">Engine: HTTPX ASYNC</span>
+          </div>
+          <div class="statusbar-item" id="statusbar-workers">Workers: 0</div>
+          <div class="statusbar-item" id="statusbar-total">Subs: 2,840</div>
+        </div>
+        <div class="statusbar-right">
+          <div class="statusbar-item">Anti-Bot Evasion: ACTIVE</div>
+          <div class="statusbar-item" style="color: var(--accent-cyan);">AutoForm Pro Max v2.4</div>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Main ES Module Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
