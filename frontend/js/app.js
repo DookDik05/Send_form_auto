@@ -1,5 +1,5 @@
 /**
- * AutoForm Pro Max - Main Application Entrypoint & Orchestrator (Impeccable Edition)
+ * AutoForm Pro Max - Main Application Entrypoint & Orchestrator (Robust Lifecycle Edition)
  */
 
 import { store } from './store.js';
@@ -17,39 +17,43 @@ class Application {
   }
 
   init() {
-    // Instantiate sub-modules
-    this.modules.dashboard = new DashboardModule();
-    this.modules.inspector = new InspectorModule();
-    this.modules.payload = new PayloadStudioModule();
-    this.modules.dispatcher = new DispatcherModule();
-    this.modules.terminal = new TerminalModule();
-    this.modules.analytics = new AnalyticsModule();
+    console.log("⚡ AutoForm Pro Max - Booting cockpit modules...");
 
-    // Render initial views
-    this.modules.dashboard.render();
-    this.modules.inspector.render();
-    this.modules.payload.render();
-    this.modules.dispatcher.render();
-    this.modules.terminal.render();
-    this.modules.analytics.render();
+    try {
+      // 1. Instantiate modules safely
+      this.modules.dashboard = new DashboardModule();
+      this.modules.inspector = new InspectorModule();
+      this.modules.payload = new PayloadStudioModule();
+      this.modules.dispatcher = new DispatcherModule();
+      this.modules.terminal = new TerminalModule();
+      this.modules.analytics = new AnalyticsModule();
 
-    // Bind sidebar navigation
-    this.bindNavigation();
+      // 2. Render initial views
+      if (this.modules.dashboard) this.modules.dashboard.render();
+      if (this.modules.inspector) this.modules.inspector.render();
+      if (this.modules.payload) this.modules.payload.render();
+      if (this.modules.dispatcher) this.modules.dispatcher.render();
+      if (this.modules.terminal) this.modules.terminal.render();
+      if (this.modules.analytics) this.modules.analytics.render();
 
-    // Setup global keyboard shortcuts & tooltips
-    this.setupKeyboardShortcuts();
-    this.setupTooltips();
+      // 3. Bind navigation & interactions
+      this.bindNavigation();
+      this.setupKeyboardShortcuts();
+      this.setupTooltips();
 
-    // Subscribe to reactive store changes
-    store.subscribe((state) => {
-      this.handleStateChange(state);
-    });
+      // 4. Subscribe to reactive store
+      store.subscribe((state) => {
+        this.handleStateChange(state);
+      });
 
-    // Restore active tab from state
-    const initialTab = store.getState().activeTab || 'dashboard';
-    this.switchTab(initialTab);
+      // 5. Activate initial tab
+      const initialTab = store.getState().activeTab || 'dashboard';
+      this.switchTab(initialTab);
 
-    console.log("⚡ AutoForm Pro Max Web UI Initialized (Impeccable Craftsmanship).");
+      console.log("✅ AutoForm Pro Max - All modules rendered successfully.");
+    } catch (err) {
+      console.error("❌ AutoForm Pro Max - Boot error:", err);
+    }
   }
 
   bindNavigation() {
@@ -63,7 +67,7 @@ class Application {
       });
     });
 
-    // Quick Dispatch header button
+    // Quick Dispatch button
     const btnQuick = document.getElementById('btn-quick-dispatch');
     if (btnQuick) {
       btnQuick.addEventListener('click', () => {
@@ -71,7 +75,7 @@ class Application {
       });
     }
 
-    // Inspect Form header button
+    // Inspect Form button
     const btnInspect = document.getElementById('btn-inspect-form');
     if (btnInspect) {
       btnInspect.addEventListener('click', () => {
@@ -82,22 +86,17 @@ class Application {
 
   setupKeyboardShortcuts() {
     window.addEventListener('keydown', (e) => {
-      // Avoid triggering when typing in inputs
-      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
-        if (e.key === 'Escape') {
-          document.activeElement.blur();
-        }
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
+        if (e.key === 'Escape') document.activeElement.blur();
         return;
       }
 
-      // Quick tab switching 1-5
       if (e.key === '1') this.switchTab('dashboard');
       else if (e.key === '2') this.switchTab('dispatcher');
       else if (e.key === '3') this.switchTab('inspector');
       else if (e.key === '4') this.switchTab('terminal');
       else if (e.key === '5') this.switchTab('analytics');
 
-      // Ctrl + Enter = Launch Campaign
       else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault();
         this.switchTab('dispatcher');
@@ -107,7 +106,6 @@ class Application {
         }, 150);
       }
 
-      // Esc = Abort Mission or close modal
       else if (e.key === 'Escape') {
         const modal = document.getElementById('shortcuts-modal');
         if (modal && modal.classList.contains('active')) {
@@ -118,7 +116,6 @@ class Application {
         }
       }
 
-      // ? = Toggle Shortcuts Modal
       else if (e.key === '?' || e.key === '/') {
         this.toggleShortcutsModal();
       }
@@ -188,7 +185,6 @@ class Application {
   }
 
   setupTooltips() {
-    // Elegant micro-tooltips implementation
     document.addEventListener('mouseover', (e) => {
       const target = e.target.closest('[data-tooltip]');
       if (!target) return;
@@ -206,7 +202,7 @@ class Application {
       tip.classList.add('visible');
 
       const rect = target.getBoundingClientRect();
-      tip.style.top = `${rect.top - 32}px`;
+      tip.style.top = `${Math.max(10, rect.top - 32)}px`;
       tip.style.left = `${rect.left + (rect.width / 2)}px`;
     });
 
@@ -219,8 +215,7 @@ class Application {
   }
 
   switchTab(tabName) {
-    if (!this.modules[tabName] && tabName !== 'dashboard') return;
-
+    if (!tabName) tabName = 'dashboard';
     this.currentTab = tabName;
     store.setState({ activeTab: tabName });
 
@@ -233,7 +228,7 @@ class Application {
       }
     });
 
-    // Update breadcrumb
+    // Update breadcrumb title
     const breadcrumb = document.getElementById('current-view-title');
     if (breadcrumb) {
       const titles = {
@@ -251,21 +246,22 @@ class Application {
     document.querySelectorAll('.view-panel').forEach(panel => {
       if (panel.id === `view-${tabName}`) {
         panel.classList.add('active');
+        panel.style.display = 'flex';
       } else {
         panel.classList.remove('active');
+        panel.style.display = 'none';
       }
     });
 
     // Module-specific hooks
-    if (tabName === 'terminal') {
+    if (tabName === 'terminal' && this.modules.terminal) {
       this.modules.terminal.scrollToBottom();
-    } else if (tabName === 'analytics') {
+    } else if (tabName === 'analytics' && this.modules.analytics) {
       this.modules.analytics.fetchLiveHistory();
     }
   }
 
   handleStateChange(state) {
-    // Update live statusbar items
     const sbTotal = document.getElementById('statusbar-total');
     if (sbTotal) sbTotal.textContent = `Subs: ${state.totalSubmissions.toLocaleString()}`;
 
@@ -273,12 +269,12 @@ class Application {
     if (sbWorkers) sbWorkers.textContent = `Workers: ${state.activeWorkers}`;
 
     const sbEngine = document.getElementById('statusbar-engine');
-    if (sbEngine) sbEngine.textContent = `Engine: ${state.currentCampaign.mode.toUpperCase()}`;
+    if (sbEngine && state.currentCampaign) sbEngine.textContent = `Engine: ${state.currentCampaign.mode.toUpperCase()}`;
 
-    // Update terminal if logs changed
-    this.modules.terminal.updateLogs(state.logs);
+    if (this.modules.terminal) {
+      this.modules.terminal.updateLogs(state.logs);
+    }
 
-    // Update KPI counters on dashboard
     const kpiTotal = document.getElementById('kpi-total-subs');
     if (kpiTotal) kpiTotal.textContent = state.totalSubmissions.toLocaleString();
 
@@ -290,7 +286,16 @@ class Application {
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  window.app = new Application();
-  window.app.init();
-});
+// Robust execution trigger for modern ES Modules
+function boot() {
+  if (!window.app) {
+    window.app = new Application();
+    window.app.init();
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}

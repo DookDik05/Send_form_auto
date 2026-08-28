@@ -202,7 +202,7 @@ export class DashboardModule {
               </tr>
             </thead>
             <tbody>
-              ${state.historyRecords.map(rec => `
+              ${(state.historyRecords || []).map(rec => `
                 <tr>
                   <td><span style="font-family: var(--font-mono); color: var(--accent-cyan);">${rec.id}</span></td>
                   <td style="font-weight: 600; color: var(--text-primary);">${rec.name}</td>

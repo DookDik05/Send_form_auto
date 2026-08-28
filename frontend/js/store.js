@@ -20,7 +20,7 @@ function savePersistedState(state) {
     const toSave = {
       activeTab: state.activeTab,
       soundEnabled: state.soundEnabled,
-      selectedPresetId: state.currentCampaign?.id || "sushi-survey",
+      selectedPresetId: state.currentCampaign?.id || "sushi-conveyor-survey",
       customSettings: state.customSettings || {}
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
@@ -71,9 +71,19 @@ class StateStore {
       
       // Terminal Logs Stream
       logs: [
-        { time: "10:45:12", type: "info", msg: "AutoForm Pro Max v2.5 Engine initialized with Cyberpunk Cockpit theme." },
-        { time: "10:45:13", type: "info", msg: "Disk Telemetry Vault connected (3,670+ historical responses loaded)." },
-        { time: "10:45:15", type: "ok", msg: "System ready. Press '?' for Keyboard Shortcuts." }
+        { time: "11:00:12", type: "info", msg: "AutoForm Pro Max v2.5 Engine initialized with Cyberpunk Cockpit theme." },
+        { time: "11:00:13", type: "info", msg: "Disk Telemetry Vault connected (3,673 historical responses loaded)." },
+        { time: "11:00:15", type: "ok", msg: "System ready. Press '?' for Keyboard Shortcuts." }
+      ],
+
+      // Historical Campaign Records
+      historyRecords: [
+        { id: "RUN-SUSHI", name: "แบบสอบถามร้านซูชิสายพาน (7Ps)", date: "2026-08-28 10:43", count: 6, success: 6, failed: 0, engine: "Selenium & HTTPX", status: "SUCCESS" },
+        { id: "RUN-890", name: "Registration 890 Batch", date: "2026-01-11 18:45", count: 1448, success: 1448, failed: 0, engine: "HTTPX Async", status: "SUCCESS" },
+        { id: "RUN-MALL", name: "แบบประเมินความพึงพอใจศูนย์การค้า", date: "2025-12-21 12:51", count: 1061, success: 1061, failed: 0, engine: "HTTPX Async", status: "SUCCESS" },
+        { id: "RUN-SATIS", name: "แบบประเมินความพึงพอใจผู้ใช้บริการ", date: "2025-11-13 17:58", count: 886, success: 886, failed: 0, engine: "HTTPX Async", status: "SUCCESS" },
+        { id: "RUN-SEAGAMES", name: "SEA Games Survey 33", date: "2026-01-11 21:08", count: 209, success: 209, failed: 0, engine: "HTTPX Async", status: "SUCCESS" },
+        { id: "RUN-FDA", name: "FDA Expo 2026", date: "2026-01-23 11:41", count: 63, success: 63, failed: 0, engine: "HTTPX Async", status: "SUCCESS" }
       ]
     };
 
@@ -97,7 +107,11 @@ class StateStore {
 
   notify() {
     for (const listener of this.listeners) {
-      listener(this.state);
+      try {
+        listener(this.state);
+      } catch (e) {
+        console.error("Store listener error:", e);
+      }
     }
   }
 
@@ -106,7 +120,7 @@ class StateStore {
     const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
     const logItem = { time: timeStr, type, msg };
     
-    const nextLogs = [...this.state.logs.slice(-250), logItem];
+    const nextLogs = [...(this.state.logs || []).slice(-250), logItem];
     this.setState({ logs: nextLogs });
   }
 
