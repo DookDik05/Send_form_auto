@@ -19,6 +19,8 @@ import csv
 import urllib.parse
 from datetime import datetime
 
+from src.utils.logger import FormLogger, get_form_slug
+
 # Windows Console UTF-8
 if sys.platform == 'win32':
     try:
@@ -240,6 +242,30 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(body)
             return
 
+        # Real-time Form Logs API Endpoint: /api/logs?form=sushi_survey&status=SUCCESS&limit=300
+        if parsed.path == "/api/logs":
+            params = urllib.parse.parse_qs(parsed.query)
+            form_param = params.get("form", ["all"])[0]
+            status_param = params.get("status", ["all"])[0]
+            limit_param = int(params.get("limit", [300])[0])
+            
+            logs = FormLogger.get_logs(form_slug=form_param, limit=limit_param, status_filter=status_param)
+            summary = FormLogger.get_log_summary()
+            
+            resp_obj = {
+                "logs": logs,
+                "summary": summary,
+                "count": len(logs)
+            }
+            body = json.dumps(resp_obj, ensure_ascii=False).encode('utf-8')
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
         # Direct CSV Download Endpoint: /api/download-csv?file=filename.csv
         if parsed.path == "/api/download-csv":
             params = urllib.parse.parse_qs(parsed.query)
@@ -265,7 +291,83 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 self.send_error(404, "File Not Found")
                 return
 
+        # Direct Log File Download Endpoint: /api/download-log?form=sushi_survey
+        if parsed.path == "/api/download-log":
+            params = urllib.parse.parse_qs(parsed.query)
+            form_param = params.get("form", ["all_dispatches"])[0]
+            slug = get_form_slug(form_param) if form_param != "all_dispatches" else "all_dispatches"
+            file_format = params.get("format", ["jsonl"])[0]
+            
+            ext = ".jsonl" if file_format == "jsonl" else ".log"
+            log_path = os.path.join(ROOT_DIR, "data", "logs", f"{slug}{ext}")
+            
+            if os.path.exists(log_path):
+                with open(log_path, "rb") as f:
+                    log_data = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", "text/plain; charset=utf-8")
+                self.send_header("Content-Disposition", f'attachment; filename="{slug}{ext}"')
+                self.send_header("Content-Length", str(len(log_data)))
+                self.end_headers()
+                self.wfile.write(log_data)
+                return
+            else:
+                self.send_error(404, "Log File Not Found")
+                return
+
         return super().do_GET()
+
+    def do_POST(self):
+        parsed = urllib.parse.urlparse(self.path)
+        
+        # Real-time Dispatch Runner API: POST /api/dispatch
+        if parsed.path == "/api/dispatch":
+            content_len = int(self.headers.get('Content-Length', 0))
+            post_body = self.rfile.read(content_len)
+            try:
+                import threading
+                import asyncio
+                from src.runners.sushi_runner import run_sushi_async
+
+                req_data = json.loads(post_body.decode('utf-8'))
+                form_id = req_data.get("formId", "sushi-conveyor")
+                count = int(req_data.get("count", 10))
+                concurrency = int(req_data.get("concurrency", 5))
+                mode = req_data.get("mode", "human")
+
+                # Launch async worker in background thread
+                def worker_thread():
+                    asyncio.run(run_sushi_async(count=count, concurrency=concurrency, mode=mode))
+
+                t = threading.Thread(target=worker_thread, daemon=True)
+                t.start()
+
+                resp = {
+                    "status": "LAUNCHED",
+                    "formId": form_id,
+                    "count": count,
+                    "concurrency": concurrency,
+                    "mode": mode,
+                    "message": f"Dispatched {count} requests for [{form_id}] via {mode} mode."
+                }
+                body = json.dumps(resp, ensure_ascii=False).encode('utf-8')
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(body)
+                return
+            except Exception as e:
+                err_resp = json.dumps({"status": "ERROR", "error": str(e)}).encode('utf-8')
+                self.send_response(500)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(err_resp)))
+                self.end_headers()
+                self.wfile.write(err_resp)
+                return
+
+        return super().do_POST()
 
     def log_message(self, format, *args):
         sys.stdout.write(f"[AutoForm Server] {self.address_string()} - {format%args}\n")

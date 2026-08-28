@@ -460,6 +460,28 @@ export class DispatcherModule {
       selStatus.textContent = "SELENIUM ENGINE DISPATCHING...";
     }
 
+    // Trigger real backend submission runner
+    try {
+      fetch('/api/dispatch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          formId: campaign.id,
+          count: target,
+          concurrency: concurrency,
+          mode: campaign.mode,
+          minDelay: this.delayConfig.minDelay,
+          maxDelay: this.delayConfig.maxDelay
+        })
+      }).then(r => r.json()).then(data => {
+        store.addLog("ok", `Backend Runner started: [${data.formId}] (${data.count} submissions via ${data.mode})`);
+      }).catch(e => {
+        console.log("Local fallback mode");
+      });
+    } catch (e) {
+      console.log("Dispatch network error:", e);
+    }
+
     // Start Live Selenium Viewport Animation
     this.startSeleniumViewportAnimation();
 
