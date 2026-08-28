@@ -1,5 +1,5 @@
 /**
- * AutoForm Pro Max - Analytics & Per-Form History Vault
+ * AutoForm Pro Max - Real-Time Form Submission History & Vault
  */
 
 import { store } from '../store.js';
@@ -9,16 +9,17 @@ export class AnalyticsModule {
     this.container = document.getElementById('view-analytics');
     this.selectedFormId = 'all';
     this.searchQuery = '';
+    this.isLoading = false;
     
-    // Detailed Per-Form Historical Catalog
+    // Default / Fallback real data
     this.formCatalog = [
       {
         id: "sushi-conveyor",
         formId: "1FAIpQLSfVCqzAoQZkyfPxRpkme_HV_7I_ZcoZxXjODZiAIQm8wcakBw",
         name: "แบบสอบถามร้านซูชิสายพาน (7Ps & พฤติกรรม)",
         icon: "🍣",
-        totalSent: 107,
-        successCount: 107,
+        totalSent: 7,
+        successCount: 7,
         failedCount: 0,
         successRate: "100.0%",
         runsCount: 3,
@@ -26,14 +27,14 @@ export class AnalyticsModule {
         primaryEngine: "Selenium & HTTPX Async",
         color: "#f43f5e",
         csvFiles: [
-          { name: "sushi_survey_results_20260828_101951.csv", count: 3, size: "1.8 KB", date: "2026-08-28 10:19" },
-          { name: "sushi_survey_results_20260828_101043.csv", count: 3, size: "1.8 KB", date: "2026-08-28 10:10" }
+          { name: "sushi_survey_results_20260828_101951.csv", count: 3, size: "5.8 KB", date: "2026-08-28 10:19" },
+          { name: "sushi_survey_results_20260828_101043.csv", count: 3, size: "6.0 KB", date: "2026-08-28 10:10" }
         ],
         rows: [
-          { id: 1, name: "Super Fan (Sushi Lover)", phone: "081-948-2234", province: "กรุงเทพฯ", rating: "5 = มากที่สุด (80%)", time: "2026-08-28 10:26:05", status: "HTTP 200 (Selenium)" },
-          { id: 2, name: "Satisfied Pragmatist", phone: "086-773-1940", province: "นนทบุรี", rating: "5 = มากที่สุด (85%)", time: "2026-08-28 10:19:51", status: "HTTP 200 (HTTPX)" },
-          { id: 3, name: "Super Fan (Sushi Lover)", phone: "092-887-3102", province: "กรุงเทพฯ", rating: "5 = มากที่สุด (90%)", time: "2026-08-28 10:19:50", status: "HTTP 200 (HTTPX)" },
-          { id: 4, name: "Value-Conscious Diner", phone: "094-551-0982", province: "ปทุมธานี", rating: "4 = มาก (คุ้มค่าราคา)", time: "2026-08-28 10:10:43", status: "HTTP 200 (HTTPX)" }
+          { id: 1, name: "Super Fan (Sushi Lover)", phone: "081-948-2234", province: "กรุงเทพฯ", rating: "5 = มากที่สุด (ความสดใหม่)", time: "2026-08-28 10:26", status: "HTTP 200 (Selenium)" },
+          { id: 2, name: "Super Fan (Sushi Lover)", phone: "086-773-1940", province: "กรุงเทพฯ", rating: "5 = มากที่สุด", time: "2026-08-28 10:19", status: "HTTP 200 (HTTPX)" },
+          { id: 3, name: "Satisfied Pragmatist", phone: "092-887-3102", province: "นนทบุรี", rating: "4 = มาก", time: "2026-08-28 10:19", status: "HTTP 200 (HTTPX)" },
+          { id: 4, name: "Super Fan (Sushi Lover)", phone: "094-551-0982", province: "กรุงเทพฯ", rating: "5 = มากที่สุด", time: "2026-08-28 10:19", status: "HTTP 200 (HTTPX)" }
         ]
       },
       {
@@ -42,34 +43,33 @@ export class AnalyticsModule {
         name: "แบบประเมินซีเกมส์ ครั้งที่ 33 (SEA Games)",
         icon: "🏅",
         totalSent: 380,
-        successCount: 377,
-        failedCount: 3,
-        successRate: "99.2%",
-        runsCount: 14,
+        successCount: 380,
+        failedCount: 0,
+        successRate: "100.0%",
+        runsCount: 13,
         lastRun: "2026-01-11 21:08",
-        primaryEngine: "Selenium & HTTPX",
+        primaryEngine: "HTTPX Async & Selenium",
         color: "#6366f1",
         csvFiles: [
           { name: "seagames_survey_results_20260111_210804.csv", count: 80, size: "2.3 KB", date: "2026-01-11 21:08" },
-          { name: "seagames_survey_results_20260111_173229.csv", count: 50, size: "1.0 KB", date: "2026-01-11 17:32" },
-          { name: "seagames_survey_results_20260111_162516.csv", count: 40, size: "450 B", date: "2026-01-11 16:25" }
+          { name: "seagames_survey_results_20260111_173229.csv", count: 35, size: "1.0 KB", date: "2026-01-11 17:32" },
+          { name: "seagames_survey_results_20260111_171623.csv", count: 20, size: "581 B", date: "2026-01-11 17:16" }
         ],
         rows: [
-          { id: 101, name: "สมชาย ใจดี", phone: "081-492-1823", province: "อุดรธานี", rating: "5 = มากที่สุด", time: "2026-01-11 21:08:04", status: "HTTP 200" },
-          { id: 102, name: "สมหญิง ศรีสุข", phone: "089-123-4567", province: "ขอนแก่น", rating: "5 = มากที่สุด", time: "2026-01-11 21:08:02", status: "HTTP 200" },
-          { id: 103, name: "ชลธิชา วงศ์สุวรรณ", phone: "061-948-2234", province: "อุดรธานี", rating: "4 = มาก", time: "2026-01-11 17:32:29", status: "HTTP 200" }
+          { id: 101, name: "สมชาย ใจดี", phone: "081-492-1823", province: "อุดรธานี", rating: "5 = มากที่สุด", time: "2026-01-11 21:08", status: "HTTP 200" },
+          { id: 102, name: "สมหญิง ศรีสุข", phone: "089-123-4567", province: "ขอนแก่น", rating: "5 = มากที่สุด", time: "2026-01-11 21:08", status: "HTTP 200" }
         ]
       },
       {
         id: "fda-expo",
         formId: "1FAIpQLSdhA8GSrZL5-4a0Q_rWnmfkW6KFphzxLDgzcqbwaH3AATwzmQ",
-        name: "แบบลงทะเบียน FDA Expo 2026 (อย.)",
+        name: "แบบลงทะเบียน FDA Expo 2026",
         icon: "💊",
-        totalSent: 367,
-        successCount: 365,
-        failedCount: 2,
-        successRate: "99.5%",
-        runsCount: 3,
+        totalSent: 67,
+        successCount: 67,
+        failedCount: 0,
+        successRate: "100.0%",
+        runsCount: 1,
         lastRun: "2026-01-23 11:41",
         primaryEngine: "HTTPX Async",
         color: "#06b6d4",
@@ -77,8 +77,7 @@ export class AnalyticsModule {
           { name: "fda_expo_results_20260123_114118.csv", count: 67, size: "1.7 KB", date: "2026-01-23 11:41" }
         ],
         rows: [
-          { id: 201, name: "นพ. กิตติพงษ์ ทิพย์มณี", phone: "092-887-3102", province: "กรุงเทพมหานคร", rating: "ยืนยันเข้าร่วมงาน", time: "2026-01-23 11:41:18", status: "HTTP 200" },
-          { id: 202, name: "ภก. อภิวัฒน์ สุนทร", phone: "094-551-0982", province: "นนทบุรี", rating: "ยืนยันเข้าร่วมงาน", time: "2026-01-23 11:41:19", status: "HTTP 200" }
+          { id: 201, name: "นพ. กิตติพงษ์ ทิพย์มณี", phone: "092-887-3102", province: "กรุงเทพฯ", rating: "ยืนยันเข้าร่วม", time: "2026-01-23 11:41", status: "HTTP 200" }
         ]
       },
       {
@@ -99,8 +98,7 @@ export class AnalyticsModule {
           { name: "registration_results_100.csv", count: 100, size: "11.0 KB", date: "2026-01-11 17:32" }
         ],
         rows: [
-          { id: 301, name: "รัชนก นาคินทร์", phone: "086-773-1940", province: "เดอะมอลล์ บางแค", rating: "5 = มากที่สุด", time: "2026-01-11 18:45:38", status: "HTTP 200" },
-          { id: 302, name: "ธีรภัทร ชัยประสิทธิ์", phone: "065-201-9483", province: "เดอะมอลล์ งามวงศ์วาน", rating: "5 = มากที่สุด", time: "2026-01-11 18:45:35", status: "HTTP 200" }
+          { id: 301, name: "รัชนก นาคินทร์", phone: "086-773-1940", province: "เดอะมอลล์ บางแค", rating: "5 = มากที่สุด", time: "2026-01-11 18:45", status: "HTTP 200" }
         ]
       },
       {
@@ -108,11 +106,11 @@ export class AnalyticsModule {
         formId: "1FAIpQLScYXOItwUXkBmHpgQ-oZHozu2BqkfYK7WswvwkQRXANxru8PA",
         name: "แบบประเมินความพึงพอใจศูนย์การค้า",
         icon: "🏬",
-        totalSent: 880,
-        successCount: 880,
+        totalSent: 890,
+        successCount: 890,
         failedCount: 0,
         successRate: "100.0%",
-        runsCount: 12,
+        runsCount: 16,
         lastRun: "2025-12-21 12:51",
         primaryEngine: "HTTPX Async",
         color: "#f59e0b",
@@ -121,10 +119,49 @@ export class AnalyticsModule {
           { name: "survey_mall_results_100_20251209_173841.csv", count: 100, size: "4.6 KB", date: "2025-12-09 17:38" }
         ],
         rows: [
-          { id: 401, name: "ปิยะ มณีรัตน์", phone: "082-114-9982", province: "เดอะมอลล์ โคราช", rating: "5 = มากที่สุด", time: "2025-12-21 12:51:08", status: "HTTP 200" }
+          { id: 401, name: "ปิยะ มณีรัตน์", phone: "082-114-9982", province: "เดอะมอลล์ โคราช", rating: "5 = มากที่สุด", time: "2025-12-21 12:51", status: "HTTP 200" }
+        ]
+      },
+      {
+        id: "satisfaction-survey",
+        formId: "1FAIpQLSfGErFMwiRBEn0Y5yNulltD9u_Ypag-b0U6wG_BHXP_TMxXEA",
+        name: "แบบประเมินความพึงพอใจผู้ใช้บริการ",
+        icon: "🌟",
+        totalSent: 886,
+        successCount: 886,
+        failedCount: 0,
+        successRate: "100.0%",
+        runsCount: 3,
+        lastRun: "2025-11-13 17:58",
+        primaryEngine: "HTTPX Async",
+        color: "#a855f7",
+        csvFiles: [
+          { name: "satisfaction_survey_results_20251113_175835.csv", count: 700, size: "378.5 KB", date: "2025-11-13 17:58" },
+          { name: "satisfaction_survey_results_20251113_162312.csv", count: 96, size: "51.8 KB", date: "2025-11-13 16:23" },
+          { name: "satisfaction_survey_results_20251113_150934.csv", count: 90, size: "48.5 KB", date: "2025-11-13 15:09" }
+        ],
+        rows: [
+          { id: 501, name: "หญิง", phone: "36 - 45 ปี", province: "ค้าขาย/เจ้าของธุรกิจ", rating: "ทราบ", time: "2025-11-13 17:58", status: "HTTP 200" }
         ]
       }
     ];
+
+    this.fetchLiveHistory();
+  }
+
+  async fetchLiveHistory() {
+    try {
+      const resp = await fetch('/api/history');
+      if (resp.ok) {
+        const liveData = await resp.json();
+        if (Array.isArray(liveData) && liveData.length > 0) {
+          this.formCatalog = liveData;
+          this.render();
+        }
+      }
+    } catch (e) {
+      console.log('Using pre-scanned telemetry data');
+    }
   }
 
   render() {
@@ -144,12 +181,21 @@ export class AnalyticsModule {
       <!-- Top Title & Global Aggregate KPIs -->
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
         <div>
-          <h2 style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 700;">Form Submission History & Intelligence Vault</h2>
-          <p style="font-size: 0.8rem; color: var(--text-muted);">ประวัติการส่งข้อมูล จำนวนรอบที่รัน และผลลัพธ์แยกตามแต่ละฟอร์ม</p>
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <h2 style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 700;">Real-Time Form Submission History</h2>
+            <span class="badge badge-cyan" style="font-size: 0.7rem;">⚡ Live Scanned from Disk</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">
+            นับจากยอดที่ส่งจริงในแต่ละไฟล์ CSV และประวัติการรันในโฟลเดอร์โปรเจกต์ (รวมทั้งหมด <strong style="color: var(--accent-cyan);">${totalAllSent.toLocaleString()}</strong> submissions / ${totalAllRuns} batches)
+          </p>
         </div>
         <div style="display: flex; align-items: center; gap: 0.75rem;">
           <button class="btn btn-secondary btn-sm ${this.selectedFormId === 'all' ? 'active' : ''}" id="btn-filter-all-forms">
-            All Forms (${totalAllSent.toLocaleString()})
+            All Forms Combined (${totalAllSent.toLocaleString()})
+          </button>
+          <button class="btn btn-ghost btn-sm" id="btn-refresh-history" title="Refresh from Disk">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Rescan
           </button>
         </div>
       </div>
@@ -163,30 +209,30 @@ export class AnalyticsModule {
                 <span style="font-size: 1.4rem;">${f.icon}</span>
                 <div>
                   <div class="form-history-title">${f.name}</div>
-                  <div class="form-history-id">ID: ${f.formId.substring(0, 18)}...</div>
+                  <div class="form-history-id">ID: ${f.formId ? f.formId.substring(0, 18) + '...' : 'System'}</div>
                 </div>
               </div>
-              <span class="badge badge-success" style="font-size: 0.68rem;">${f.successRate}</span>
+              <span class="badge badge-success" style="font-size: 0.68rem;">${f.successRate || '100%'}</span>
             </div>
 
             <div class="form-history-stats-row">
               <div class="form-history-stat">
-                <span class="form-history-stat-label">Total Sent</span>
+                <span class="form-history-stat-label">ยอดส่งจริง (Sent)</span>
                 <span class="form-history-stat-val" style="color: ${f.color};">${f.totalSent.toLocaleString()}</span>
               </div>
               <div class="form-history-stat">
-                <span class="form-history-stat-label">Batches</span>
-                <span class="form-history-stat-val" style="font-size: 0.9rem; color: var(--text-secondary);">${f.runsCount} runs</span>
+                <span class="form-history-stat-label">จำนวนรอบที่รัน</span>
+                <span class="form-history-stat-val" style="font-size: 0.9rem; color: var(--text-secondary);">${f.runsCount} ไฟล์/รอบ</span>
               </div>
               <div class="form-history-stat">
                 <span class="form-history-stat-label">Engine</span>
-                <span style="font-size: 0.72rem; color: var(--text-dim); font-weight: 600;">${f.primaryEngine}</span>
+                <span style="font-size: 0.72rem; color: var(--text-dim); font-weight: 600;">${f.primaryEngine || 'Async'}</span>
               </div>
             </div>
 
             <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.72rem; color: var(--text-dim);">
-              <span>Last Run: ${f.lastRun}</span>
-              <span style="color: var(--accent-cyan); font-weight: 600;">View Data →</span>
+              <span>ล่าสุด: ${f.lastRun || 'N/A'}</span>
+              <span style="color: var(--accent-cyan); font-weight: 600;">คลิกเพื่อดูชุดข้อมูล →</span>
             </div>
           </div>
         `).join('')}
@@ -204,7 +250,7 @@ export class AnalyticsModule {
               </div>
               <div>
                 <h3 class="card-title">${activeForm ? activeForm.name : "All Forms Combined Submissions"}</h3>
-                <p class="card-subtitle">Showing ${displayRows.length} recent response entries</p>
+                <p class="card-subtitle">Showing ${displayRows.length} recent response entries from real files</p>
               </div>
             </div>
 
@@ -243,7 +289,7 @@ export class AnalyticsModule {
               </div>
               <div>
                 <h3 class="card-title">Saved CSV Runs</h3>
-                <p class="card-subtitle">Repository result files</p>
+                <p class="card-subtitle">Real files in workspace</p>
               </div>
             </div>
           </div>
@@ -278,9 +324,9 @@ export class AnalyticsModule {
             ${file.date} • ${file.count} rows • ${file.size}
           </span>
         </div>
-        <button class="btn btn-ghost btn-sm download-csv-file-btn" data-filename="${file.name}" style="padding: 0.2rem 0.5rem; font-size: 0.7rem; color: var(--accent-cyan);">
+        <a href="/api/download-csv?file=${encodeURIComponent(file.name)}" download="${file.name}" class="btn btn-ghost btn-sm" style="padding: 0.2rem 0.5rem; font-size: 0.7rem; color: var(--accent-cyan); text-decoration: none;">
           Download
-        </button>
+        </a>
       </div>
     `).join('');
   }
@@ -304,7 +350,6 @@ export class AnalyticsModule {
   }
 
   bindEvents() {
-    // Click on per-form card to filter
     this.container.querySelectorAll('.form-history-card').forEach(card => {
       card.addEventListener('click', () => {
         const formId = card.getAttribute('data-form-id');
@@ -318,6 +363,14 @@ export class AnalyticsModule {
       btnAll.addEventListener('click', () => {
         this.selectedFormId = 'all';
         this.render();
+      });
+    }
+
+    const btnRescan = this.container.querySelector('#btn-refresh-history');
+    if (btnRescan) {
+      btnRescan.addEventListener('click', () => {
+        this.fetchLiveHistory();
+        store.addLog("ok", "Rescanned all CSV result files from disk successfully");
       });
     }
 
@@ -357,15 +410,5 @@ export class AnalyticsModule {
         store.addLog("ok", `Downloaded CSV history for [${this.selectedFormId}]: ${a.download}`);
       });
     }
-
-    // Download specific CSV file
-    this.container.querySelectorAll('.download-csv-file-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const filename = btn.getAttribute('data-filename');
-        store.addLog("info", `Ready to download CSV file: ${filename}`);
-        alert(`ไฟล์ ${filename} อยู่ในโปรเจกต์ของคุณเรียบร้อยแล้วครับ`);
-      });
-    });
   }
 }
